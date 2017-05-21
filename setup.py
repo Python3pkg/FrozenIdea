@@ -21,7 +21,7 @@ def getVersion(data):
     Parse version from changelog written in RST format.
     """
     def allSame(s):
-        return not any(filter(lambda x: x != s[0], s))
+        return not any([x for x in s if x != s[0]])
 
     def hasDigit(s):
         return any(char.isdigit() for char in s)

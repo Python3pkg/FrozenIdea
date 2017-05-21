@@ -152,7 +152,7 @@ class FrozenIdea(object):
             chans = self.join_list
 
         for chan in chans:
-            if isinstance(chan, basestring):
+            if isinstance(chan, str):
                 self.join(chan)
             elif type(chan) in [tuple, list]:
                 for c in chan:
@@ -215,7 +215,7 @@ class FrozenIdea(object):
             msg = self.part_msg
 
         if self.verbose:
-            print "---", chan
+            print("---", chan)
 
         self._socket_send_line("PART " + chan + " :" + str(msg))
 
@@ -296,7 +296,7 @@ class FrozenIdea(object):
             for msg in msgs:
                 msg = bytes(msg)
                 if self.verbose:
-                    print msg.strip()
+                    print(msg.strip())
 
                 if msg.startswith("PING"):  # react o ping
                     ping_val = msg.split()[1].strip()
@@ -369,10 +369,7 @@ class FrozenIdea(object):
                 new_chan = False
 
             # get list of nicks, remove chan statuses (op/halfop/..)
-            msg = map(
-                lambda nick: nick if nick[0] not in "&@%+" else nick[1:],
-                parsed.text.split()
-            )
+            msg = [nick if nick[0] not in "&@%+" else nick[1:] for nick in parsed.text.split()]
 
             self.chans[chan_name] = msg
 
@@ -450,7 +447,7 @@ class FrozenIdea(object):
         elif parsed.type == "NICK":
             old_nick = parsed.nick.split("!")[0].strip()
 
-            for chan in self.chans.keys():
+            for chan in list(self.chans.keys()):
                 if old_nick in self.chans[chan]:
                     self.chans[chan].remove(old_nick)
                     self.chans[chan].append(parsed.text)
@@ -471,7 +468,7 @@ class FrozenIdea(object):
         elif parsed.type.startswith("QUIT"):
             nick = parsed.nick.split("!")[0].strip()
 
-            for chan in self.chans.keys():
+            for chan in list(self.chans.keys()):
                 if nick in self.chans[chan]:
                     self.chans[chan].remove(nick)
 
